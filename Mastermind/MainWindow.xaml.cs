@@ -17,7 +17,7 @@ namespace Mastermind
         private bool _isDebugMode = false;
         private int _gamePoints = 100;
         private int _attempts = 0;
-        private const int _maxAttempts = 10;
+        private int _maxAttempts = 10;
         private DispatcherTimer? _timer;
         private int _timerCount = 0;
         private const int _timerMaxCount = 10;
@@ -699,6 +699,22 @@ namespace Mastermind
                         ;
                         break;
                     case "attemptsItem":
+
+                        string attempts = Interaction.InputBox("Geef het aantal attempts in tussen min 3 en max 20:", "Pogingen", "", 500);
+
+                        int newAttempt = _maxAttempts;
+                        while (string.IsNullOrEmpty(attempts) )
+                        {
+                            MessageBox.Show("Geef een geldige poging:", "Foutieve invoer");
+                            attempts = Interaction.InputBox("Geef het aantal attempts in tussen min 3 en max 20:", "Pogingen", "", 500);
+                        }
+
+                        if (int.TryParse(attempts, out int correctPoging) || correctPoging >= 3 || correctPoging <= 20)
+                        {
+                            _maxAttempts = correctPoging;
+                            RunGame(forceNewGame: true);
+                        }
+
 
                         ;
                         break;
