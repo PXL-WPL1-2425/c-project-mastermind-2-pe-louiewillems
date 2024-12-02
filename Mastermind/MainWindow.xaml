@@ -48,10 +48,10 @@
 
             <StackPanel Grid.Row="0" Margin="0,0,0,20">
                 <StackPanel  DockPanel.Dock="Top" Margin="0,0,0,7" >
-                    <StackPanel  x:Name="nameInsertStack"  Orientation="Horizontal" HorizontalAlignment="Center" Visibility="Collapsed">
+                    <!--<StackPanel  x:Name="nameInsertStack"  Orientation="Horizontal" HorizontalAlignment="Center" Visibility="Collapsed">
                         <Label Content="Player name" Foreground="White"/>
                         <TextBox Width="200"></TextBox>
-                    </StackPanel>
+                    </StackPanel>-->
                     <StackPanel x:Name="attempsInsertStack" Orientation="Horizontal" HorizontalAlignment="Center" Visibility="Collapsed">
                         <Label Content="Pogingen" Foreground="White"/>
                         <TextBox Width="50"></TextBox>

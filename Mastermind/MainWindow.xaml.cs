@@ -6,6 +6,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Text;
+using Microsoft.VisualBasic;
 
 namespace Mastermind
 {
@@ -74,14 +75,14 @@ namespace Mastermind
             };
             backRadial.GradientStops[0].BeginAnimation(GradientStop.OffsetProperty, stopPosition0Animation);
 
-            StartGame(forceNewGame: true);
+            RunGame(forceNewGame: true);
         }
 
         #region Game
         /// <summary>
         /// Resets everything and starts a new game
         /// </summary>
-        private void StartGame(bool forceNewGame = false)
+        private void RunGame(bool forceNewGame = false)
         {
             EndGame(false, forceNewGame: forceNewGame);
             _isCorrectGuess = false;
@@ -98,8 +99,22 @@ namespace Mastermind
             _choiceEllipses.AddRange(new List<Ellipse>() { choiceEllipse0, choiceEllipse1, choiceEllipse2, choiceEllipse3 });
             _labels.AddRange(new List<Label>() { redLabel, orangeLabel, yellowLabel, whiteLabel, greenLabel, blueLabel });
 
+            string naam = StartGame();
+
             ResetAllBalls();
             StartCountdown();
+        }
+
+        private string StartGame()
+        {
+            string naam = Interaction.InputBox("Geef een geldige naam in:", "Player naam", "", 500);
+            while (string.IsNullOrEmpty(naam))
+            {
+                MessageBox.Show("Geef een geldige naam in:", "Foutieve invoer");
+                naam = Interaction.InputBox("Geef een geldige naam in:", "Player naam", "", 500);
+            }
+            return naam;
+
         }
 
         /// <returns>4 random colors</returns>
@@ -328,7 +343,7 @@ namespace Mastermind
                 }
 
                 if (MessageBox.Show(message, title, MessageBoxButton.YesNo, icon) == MessageBoxResult.Yes)
-                    StartGame();
+                    RunGame();
                 else
                     ExitApp();
             }
@@ -649,7 +664,7 @@ namespace Mastermind
                 switch (menuIten.Name)
                 {
                     case "newItem":
-                        StartGame();
+                        RunGame();
                         ;
                         break;
                     case "highScoreItem":
