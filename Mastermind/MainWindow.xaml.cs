@@ -23,6 +23,7 @@ namespace Mastermind
         private const int _timerMaxCount = 10;
         private bool _enableResetOnEachTurn = false;
 
+
         private List<(string name, List<SolidColorBrush> color)> _selectedColors = new List<(string name, List<SolidColorBrush> color)>();
         private readonly List<Label> _labels = new List<Label>();
         private readonly List<Ellipse> _choiceEllipses = new List<Ellipse>();
@@ -36,7 +37,10 @@ namespace Mastermind
             { "blue", new List<SolidColorBrush> { Brushes.FloralWhite, Brushes.Blue, Brushes.DarkBlue } },
         };
 
+        private string[] _highScores = new string[15];
+        private List<HighScore> _highScoresList = new List<HighScore>();
         private Ellipse? _selectedEllipse;
+        private string _currentPlayerName = string.Empty;
 
         #endregion
 
@@ -99,7 +103,7 @@ namespace Mastermind
             _choiceEllipses.AddRange(new List<Ellipse>() { choiceEllipse0, choiceEllipse1, choiceEllipse2, choiceEllipse3 });
             _labels.AddRange(new List<Label>() { redLabel, orangeLabel, yellowLabel, whiteLabel, greenLabel, blueLabel });
 
-            string naam = StartGame();
+            _currentPlayerName = StartGame();
 
             ResetAllBalls();
             StartCountdown();
@@ -341,10 +345,27 @@ namespace Mastermind
                     icon = MessageBoxImage.Information;
                 }
 
+                CalculateHighScores(_currentPlayerName, _attempts, _gamePoints);
+
                 MessageBox.Show(message, title, MessageBoxButton.OK, icon);
 
-                RunGame(forceNewGame:true);
+                RunGame(forceNewGame: true);
             }
+        }
+
+        private void CalculateHighScores(string currentPlayer, int pogingen, int score)
+        {
+            _highScoresList.Add(new HighScore { Name = currentPlayer, Pogingen = pogingen, Score = score });
+            _highScoresList = _highScoresList.OrderByDescending(x => x.Score).Take(15).ToList();
+
+            List<string> newScores = new List<string>();
+            foreach (HighScore highScore in _highScoresList)
+            {
+                string scoreString = $"{highScore.Name} - {highScore.Pogingen} pogingen - {highScore.Score}/100";
+                newScores.Add(scoreString);
+            }
+
+            _highScores = newScores.ToArray();
         }
 
         #endregion
@@ -658,18 +679,18 @@ namespace Mastermind
         {
             if (sender is MenuItem menuIten)
             {
-
                 switch (menuIten.Name)
                 {
                     case "newItem":
                         RunGame();
-                        ;
                         break;
                     case "highScoreItem":
 
                         StringBuilder sb = new StringBuilder();
-                        sb.AppendLine("");
-                        //todo:show messagebox highscores
+                        foreach (string score in _highScores)
+                        {
+                            sb.AppendLine(score);
+                        }
                         MessageBox.Show(sb.ToString(), "Mastermind highscores", MessageBoxButton.OK, MessageBoxImage.Information);
                         ;
                         break;
@@ -685,5 +706,13 @@ namespace Mastermind
 
             }
         }
+    }
+
+
+    class HighScore
+    {
+        public int Pogingen { get; set; }
+        public int Score { get; set; }
+        public string Name { get; set; }
     }
 }
