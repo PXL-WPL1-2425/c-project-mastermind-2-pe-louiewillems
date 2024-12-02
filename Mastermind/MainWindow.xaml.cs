@@ -21,7 +21,7 @@ namespace Mastermind
         private DispatcherTimer? _timer;
         private int _timerCount = 0;
         private const int _timerMaxCount = 10;
-        private bool _enableResetOnEachTurn = true;
+        private bool _enableResetOnEachTurn = false;
 
         private List<(string name, List<SolidColorBrush> color)> _selectedColors = new List<(string name, List<SolidColorBrush> color)>();
         private readonly List<Label> _labels = new List<Label>();
@@ -328,24 +328,22 @@ namespace Mastermind
         private void EndGame(bool isVictory, bool forceNewGame = false)
         {
             _timer?.Stop();
-
             if (!forceNewGame)
             {
                 string title = "YOU LOOSE";
-                string message = $"You failed!! De correcte code was {string.Join(' ', _selectedColors.Select(x => x.name))}. Nog eens proberen?";
+                string message = $"You failed!! De correcte code was {string.Join(' ', _selectedColors.Select(x => x.name))}. ";
                 MessageBoxImage icon = MessageBoxImage.Question;
 
                 if (isVictory)
                 {
                     title = "WINNER";
-                    message = $"Code is gekraakt in {_attempts} pogingen! Wil je nog eens proberen?";
+                    message = $"Code is gekraakt in {_attempts} pogingen!";
                     icon = MessageBoxImage.Information;
                 }
 
-                if (MessageBox.Show(message, title, MessageBoxButton.YesNo, icon) == MessageBoxResult.Yes)
-                    RunGame();
-                else
-                    ExitApp();
+                MessageBox.Show(message, title, MessageBoxButton.OK, icon);
+
+                RunGame(forceNewGame:true);
             }
         }
 
